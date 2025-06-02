@@ -1,0 +1,23 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+  
+        <referenceContainer name="content">
+            <referenceBlock name="slider-2" remove="true"/>
+             <referenceBlock name="hero" remove="true"/>
+              <referenceBlock name="content-1" remove="true"/>
+              
+        </referenceContainer>
+        <referenceContainer name="content.top">
+            <block class="Magento\Framework\View\Element\Template" name="new.banner" template="Magento_Theme::banner/new_banner.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="special.section" template="Magento_Theme::why_shop.phtml"/>
+            <block class="Magento\Catalog\Block\Product\ListProduct" name="custom.product.list" template="Magento_Theme::product_category_list.phtml">
+                <!-- <arguments>
+                    <argument name="category_id" xsi:type="string">2</argument>
+                </arguments> -->
+            </block>
+            <block class="Magento\Framework\View\Element\Template" name="popular.list" template="Magento_Theme::popular_list.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

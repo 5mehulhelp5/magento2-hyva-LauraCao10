@@ -1,0 +1,91 @@
+<?php
+/**
+ * Template for special section on homepage
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+?>
+
+<div x-data="popularList" x-cloak >
+    <div class='flex flex-col gap-3 items-center justify-center pb-5 text-center'>
+        <h3 class='text-xl font-medium'>Experts in Floorcare for over 40 Years</h3>
+        <p class="text-gray-600 text-sm">Tackle every mess imaginable with our extensive range of expertly designed floorcare products.</p>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-5" x-cloak>
+        <template x-for="item in items" :key="item.id">
+            <div class="bg-[#f4f4f4] rounded-sm overflow-hidden">
+                <div class="transform duration-500 hover:translate-x-5 hover:-translate-y-5 pointer-events-none bg-blue-200 rounded-sm">
+                    <img 
+                        :src="item.image" 
+                        :alt="item.title" 
+                        class="w-full h-[90px] object-cover xl:h-[300px] transform duration-500 hover:-translate-x-2 hover:translate-y-2 pointer-events-auto"
+                    />
+                </div>
+                <div class="xl:px-4 px-1 py-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="md:text-lg text-[14px] font-semibold" x-text="item.title"></h3>
+                        <a :href="item.url" class="transition duration-300 hover:scale-105">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="text-gray-600 text-[12px] md:text-sm" x-text="item.description"></p>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('popularList', () => ({
+            items: [
+                {
+                    id: 1,
+                    title: 'Cordless Vacuums',
+                    url: '<?= $escaper->escapeJs($block->getUrl('catalog/category/view/id/3')) ?>',
+                    description: 'Explore our range of Cordless Vacuums with up to £150 off. Feel the freedom of cleaning.',
+                    image: '<?= $escaper->escapeJs($block->getViewFileUrl('images/banners/banner1.jpg')) ?>'
+                },
+                {
+                    id: 2,
+                    title: 'Robot Vacuums',
+                    url: '<?= $escaper->escapeJs($block->getUrl('catalog/category/view/id/4')) ?>',
+                    description: 'Discover smart Robot Vacuums with advanced navigation, now with up to £200 off.',
+                    image: '<?= $escaper->escapeJs($block->getViewFileUrl('images/banners/banner2.jpg')) ?>'
+                },
+                {
+                    id: 3,
+                    title: 'Upright Vacuums',
+                    url: '<?= $escaper->escapeJs($block->getUrl('catalog/category/view/id/5')) ?>',
+                    description: 'Powerful Upright Vacuums for deep cleaning, save up to £100 this month.',
+                    image: '<?= $escaper->escapeJs($block->getViewFileUrl('images/banners/banner3.jpg')) ?>'
+                },
+                 {
+                    id: 4,
+                    title: 'Cordless Vacuums',
+                    url: '<?= $escaper->escapeJs($block->getUrl('catalog/category/view/id/3')) ?>',
+                    description: 'Explore our range of Cordless Vacuums with up to £150 off. Feel the freedom of cleaning.',
+                    image: '<?= $escaper->escapeJs($block->getViewFileUrl('images/banners/banner4.jpg')) ?>'
+                },
+                {
+                    id: 5,
+                    title: 'Robot Vacuums',
+                    url: '<?= $escaper->escapeJs($block->getUrl('catalog/category/view/id/4')) ?>',
+                    description: 'Discover smart Robot Vacuums with advanced navigation, now with up to £200 off.',
+                    image: '<?= $escaper->escapeJs($block->getViewFileUrl('images/banners/banner5.jpg')) ?>'
+                },
+                {
+                    id: 6,
+                    title: 'Upright Vacuums',
+                    url: '<?= $escaper->escapeJs($block->getUrl('catalog/category/view/id/5')) ?>',
+                    description: 'Powerful Upright Vacuums for deep cleaning, save up to £100 this month.',
+                    image: '<?= $escaper->escapeJs($block->getViewFileUrl('images/banners/banner6.jpg')) ?>'
+                }
+            ]
+        }));
+    });
+</script>

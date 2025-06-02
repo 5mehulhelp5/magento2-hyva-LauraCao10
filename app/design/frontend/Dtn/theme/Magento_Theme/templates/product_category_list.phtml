@@ -1,0 +1,200 @@
+
+<?php
+/**
+ * Template for displaying product list on homepage
+ * @var \Magento\Catalog\Block\Product\ListProduct $block
+ */
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+$productCollection = $block->getLoadedProductCollection();
+// $categoryId = $block->getData('category_id');
+// echo "Category ID: " . $categoryId . "<br>";
+// echo "Số sản phẩm: " . $productCollection->count() . "<br>";
+// foreach ($productCollection as $product) {
+//     echo "Sản phẩm: " . $product->getName() . "<br>";
+// }
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+
+?>
+
+<div class="container mx-auto md:py-8 py-4 category-products" x-data="productListing" x-cloak>
+    <h2 class=" text-lg md:text-2xl font-bold text-gray-500 mb-3 md:mb-6">Sản Phẩm Nổi Bật</h2>
+    
+    <!-- Toolbar: Lọc và sắp xếp -->
+    <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <!-- Lọc giá -->
+        <div class="flex items-center gap-4">
+            <label for="priceFilter" class="text-gray-700 text-[12px] md:text-base">Lọc giá tối đa:</label>
+            <input 
+                type="range" 
+                id="priceFilter" 
+                min="0" 
+                max="1000" 
+                step="10" 
+                x-model="maxPrice" 
+                class="w-[5rem] md:w-48 accent-blue-600"
+            >
+            <span class="text-gray-600 text-[12px] md:text-base" x-text="`Dưới ${maxPrice} USD`"></span>
+        </div>
+        <!-- Sắp xếp -->
+        <div class="flex items-center gap-4">
+            <label for="sortOrder" class="text-gray-700 text-[12px] md:text-base">Sắp xếp:</label>
+            <select 
+                x-model="sortOrder" 
+                @change="sortProducts()" 
+                class="border rounded md:px-2 px-1 py-1 text-[12px] md:text-base"
+            >
+                <option value="name_asc">Tên (A-Z)</option>
+                <option value="name_desc">Tên (Z-A)</option>
+                <option value="price_asc">Giá (Thấp-Cao)</option>
+                <option value="price_desc">Giá (Cao-Thấp)</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="mb-6">
+        <ul class="flex gap-0 md:gap-4 border-b text-[12px] md:text-base">
+            <li 
+                class="cursor-pointer px-4 py-2" 
+                :class="{ 'border-[#ccc] border-b-2 rounded-t': activeTab === 'all' }" 
+                @click="activeTab = 'all'"
+            >
+                Tất cả
+            </li>
+            <li 
+                class="cursor-pointer px-4 py-2" 
+                :class="{ 'border-[#ccc]  border-b-2 rounded-t': activeTab === 'sale' }" 
+                @click="activeTab = 'sale'"
+            >
+                Đang Giảm Giá
+            </li>
+            <li 
+                class="cursor-pointer px-4 py-2" 
+                :class="{ 'border-[#ccc]  border-b-2 rounded-t': activeTab === 'featured' }" 
+                @click="activeTab = 'featured'"
+            >
+                Nổi bật
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Grid sản phẩm -->
+    <div 
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" 
+        x-show="filteredProducts.length" 
+        x-transition.opacity.duration.500ms
+        
+    >
+        <template x-for="product in filteredProducts" :key="product.id">
+            <div class="border rounded-lg md:p-4 p-1 bg-white hover:bg-blue-50 transition-transform transform hover:scale-105 shadow-sm">
+                <img 
+                    @click="showQuickView(product)" 
+                    :src="product.image" 
+                    :alt="product.name" 
+                    class="w-full h-auto md:h-[320px] object-cover rounded-md mb-4"
+                />
+                <h3 class="md:text-lg text-base font-semibold text-gray-700 md:mb-2 mb-1" x-text="product.name"></h3>
+                <p class="text-gray-600 xl:mb-4 mb-1" x-text="`$${product.price}`"></p>
+                <div class="flex gap-2 flex-col md:flex-row justify-center items-center">
+                    <a 
+                        :href="product.url" 
+                        class="inline-block text-[12px] w-[80%] text-center md:w-auto md:text-[14px] bg-primary text-white md:px-4 px-1 md:py-2 rounded hover:bg-[#90edf9] transition-colors"
+                    >
+                        Xem Chi Tiết
+                    </a>
+                    <button 
+                        @click="showQuickView(product)" 
+                        class="inline-block bg-[#90edf9] w-[80%] text-center md:w-auto text-[12px] md:text-[14px] text-white md:px-4 md:py-2 px-1 rounded hover:bg-[#c4f8ff] transition-colors"
+                    >
+                        Quick View
+                    </button>
+                </div>
+            </div>
+        </template>
+    </div>
+    <template x-if="filteredProducts.length===0">
+        <div class="text-center text-gray-600 py-4">
+            Không tìm thấy sản phẩm.
+        </div>
+    </template>
+    
+    <!-- Quick View Modal -->
+    <div 
+        x-show="isQuickViewOpen" 
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
+        x-cloak
+    >
+        <div 
+            class="bg-white p-6 rounded-lg max-w-lg w-full relative" 
+            x-transition.scale.origin.center.duration.300ms
+        >
+            <button 
+                @click="isQuickViewOpen = false" 
+                class="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+            >
+                ✕
+            </button>
+            <h3 class="text-xl font-bold mb-4" x-text="selectedProduct.name"></h3>
+            <img :src="selectedProduct.image" class="w-full h-[48] object-cover rounded-md mb-4" />
+            <p class="text-gray-600 mb-4" x-text="`$${selectedProduct.price}`"></p>
+            <a :href="selectedProduct.url" class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-blue-700">
+                Xem Chi Tiết
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('productListing', () => ({
+            maxPrice: 1000,
+            sortOrder: 'name_asc',
+            activeTab: 'all',
+            isQuickViewOpen: false,
+            selectedProduct: {},
+            products: [
+                <?php foreach ($productCollection as $product): ?>
+                {
+                    id: '<?= $this->escapeJs($product->getId()); ?>',
+                    name: '<?= $this->escapeJs($product->getName()); ?>',
+                    price: <?= (float)$product->getFinalPrice(); ?>,
+                    image: '<?= $this->escapeJs($imageHelper->init($product, 'category_page_grid')->resize(300, 300)->getUrl()); ?>',
+                    url: '<?= $this->escapeJs($product->getProductUrl()); ?>',
+                    isSale: <?= $product->getSpecialPrice() ? 'true' : 'false'; ?>,
+                    isFeatured: <?= $product->getData('is_featured') ? 'true' : 'false'; ?>
+                },
+                <?php endforeach; ?>
+            ],
+            init() {
+                if (!this.products.length) console.warn('No products loaded');
+            },
+            get filteredProducts() {
+                return this.products
+                    .filter(product => {
+                        if (this.activeTab === 'sale') return product.isSale;
+                        if (this.activeTab === 'featured') return product.isFeatured;
+                        return true;
+                    })
+                    .filter(product => product.price <= this.maxPrice)
+                    .sort((a, b) => {
+                        if (this.sortOrder === 'name_asc') return a.name.localeCompare(b.name);
+                        if (this.sortOrder === 'name_desc') return b.name.localeCompare(a.name);
+                        if (this.sortOrder === 'price_asc') return a.price - b.price;
+                        if (this.sortOrder === 'price_desc') return b.price - a.price;
+                        return 0;
+                    })
+                    .slice(0, 8);
+            },
+            sortProducts() {
+                this.products = [...this.products];
+            },
+            showQuickView(product) {
+                this.selectedProduct = product;
+                this.isQuickViewOpen = true;
+            }
+        }));
+    });
+</script>
