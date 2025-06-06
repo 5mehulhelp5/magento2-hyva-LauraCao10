@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Template for special section on homepage
  * @var \Magento\Framework\View\Element\Template $block
  */
+
 use Magento\Framework\Escaper;
 
 /** @var Escaper $escaper */
@@ -11,42 +13,38 @@ use Magento\Framework\Escaper;
 <div class="pt-[2rem] " x-data="specialSection" x-cloak>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 px-2 md:px-[50px] gap-3 justify-center text-[12px]">
         <template x-for="item in items" :key="item.id">
-    <div 
-                class="border rounded-sm flex gap-2 items-center justify-center py-1 px-2 cursor-pointer hover:bg-gray-100 transition  duration-300 hover:scale-105" 
-                @click="showModal(item.id)"
-            >
+            <div
+                class="border rounded-sm flex gap-2 items-center justify-center py-1 px-2 cursor-pointer hover:bg-gray-100 transition  duration-300 hover:scale-105"
+                @click="showModal(item.id)">
                 <span x-html="item.svg" class="size-6"></span>
                 <h2 x-text="item.title" class="text-[12px]"></h2>
             </div>
         </template>
     </div>
 
-    <!-- Modal -->
-    <div 
-        x-show="isModalOpen" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
+
+    <div
+        x-show="isModalOpen"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         x-cloak
-        @click="closeModal"
-    >
-    
-        <div 
-            class="bg-white p-6 rounded-lg max-w-lg w-full relative" 
+        @click="closeModal">
+
+        <div
+            class="bg-white p-6 rounded-lg max-w-lg w-full relative"
             x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 transform scale-95"
             x-transition:enter-end="opacity-100 transform scale-100"
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-95"
-            @click.stop
-        >
-            <button 
-                @click="closeModal" 
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-            >
+            @click.stop>
+            <button
+                @click="closeModal"
+                class="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
                 ✕
             </button>
             <h3 class="text-xl font-bold mb-4" x-text="selectedItem.title"></h3>
-        <p class="text-gray-600 mb-4" x-text="selectedItem.description"></p>
+            <p class="text-gray-600 mb-4" x-text="selectedItem.description"></p>
         </div>
     </div>
 </div>
@@ -55,9 +53,11 @@ use Magento\Framework\Escaper;
     document.addEventListener('alpine:init', () => {
         Alpine.data('specialSection', () => ({
             isModalOpen: false,
-            selectedItem: { title: '', description: '' },
-            items: [
-                {
+            selectedItem: {
+                title: '',
+                description: ''
+            },
+            items: [{
                     id: 1,
                     svg: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" /></svg>',
                     title: 'Over 40 Years in the Industry',
@@ -95,12 +95,18 @@ use Magento\Framework\Escaper;
                 }
             ],
             showModal(id) {
-                this.selectedItem = this.items.find(item => item.id === id) || { title: 'Không tìm thấy', description: 'Nội dung không khả dụng.' };
+                this.selectedItem = this.items.find(item => item.id === id) || {
+                    title: 'Không tìm thấy',
+                    description: 'Nội dung không khả dụng.'
+                };
                 this.isModalOpen = true;
             },
             closeModal() {
                 this.isModalOpen = false;
-                this.selectedItem = { title: '', description: '' };
+                this.selectedItem = {
+                    title: '',
+                    description: ''
+                };
             }
         }));
     });

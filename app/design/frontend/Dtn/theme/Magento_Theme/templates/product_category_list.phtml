@@ -22,9 +22,7 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 <div class="container mx-auto md:py-8 py-4 category-products" x-data="productListing" x-cloak>
     <h2 class=" text-lg md:text-2xl font-bold text-gray-500 mb-3 md:mb-6">Sản Phẩm Nổi Bật</h2>
     
-    <!-- Toolbar: Lọc và sắp xếp -->
     <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <!-- Lọc giá -->
         <div class="flex items-center gap-4">
             <label for="priceFilter" class="text-gray-700 text-[12px] md:text-base">Lọc giá tối đa:</label>
             <input 
@@ -38,7 +36,6 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
             >
             <span class="text-gray-600 text-[12px] md:text-base" x-text="`Dưới ${maxPrice} USD`"></span>
         </div>
-        <!-- Sắp xếp -->
         <div class="flex items-center gap-4">
             <label for="sortOrder" class="text-gray-700 text-[12px] md:text-base">Sắp xếp:</label>
             <select 
@@ -54,7 +51,6 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
         </div>
     </div>
     
-    <!-- Tabs -->
     <div class="mb-6">
         <ul class="flex gap-0 md:gap-4 border-b text-[12px] md:text-base">
             <li 
@@ -81,7 +77,6 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
         </ul>
     </div>
     
-    <!-- Grid sản phẩm -->
     <div 
         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" 
         x-show="filteredProducts.length" 
@@ -121,7 +116,7 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
         </div>
     </template>
     
-    <!-- Quick View Modal -->
+
     <div 
         x-show="isQuickViewOpen" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
@@ -156,7 +151,7 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
             isQuickViewOpen: false,
             selectedProduct: {},
             products: [
-                <?php foreach ($productCollection as $product): ?>
+                <?php foreach ($productCollection as $product): ?>,
                 {
                     id: '<?= $this->escapeJs($product->getId()); ?>',
                     name: '<?= $this->escapeJs($product->getName()); ?>',
