@@ -7,6 +7,11 @@ const hyvaModules = require("@hyva-themes/hyva-modules");
 module.exports = hyvaModules.mergeTailwindConfig({
     theme: {
         extend: {
+            transitionDelay: {
+                "layer-1": "0ms",
+                "layer-2": "100ms",
+                "layer-3": "200ms",
+            },
             screens: {
                 sm: "640px",
                 // => @media (min-width: 640px) { ... }

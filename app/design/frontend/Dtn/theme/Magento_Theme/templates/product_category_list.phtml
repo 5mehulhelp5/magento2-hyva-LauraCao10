@@ -67,56 +67,77 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
             >
                 Đang Giảm Giá
             </li>
-            <li 
-                class="cursor-pointer px-4 py-2" 
-                :class="{ 'border-[#ccc]  border-b-2 rounded-t': activeTab === 'featured' }" 
-                @click="activeTab = 'featured'"
-            >
-                Nổi bật
-            </li>
+            
         </ul>
     </div>
     
     <div 
-        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" 
+        class="relative overflow-x-hidden" 
         x-show="filteredProducts.length" 
         x-transition.opacity.duration.500ms
         
     >
-        <template x-for="product in filteredProducts" :key="product.id">
-            <div class="border rounded-lg md:p-4 p-1 bg-white hover:bg-blue-50 transition-transform transform hover:scale-105 shadow-sm">
-                <img 
-                    @click="showQuickView(product)" 
-                    :src="product.image" 
-                    :alt="product.name" 
-                    class="w-full h-auto md:h-[320px] object-cover rounded-md mb-4"
-                />
-                <h3 class="md:text-lg text-base font-semibold text-gray-700 md:mb-2 mb-1" x-text="product.name"></h3>
-                <p class="text-gray-600 xl:mb-4 mb-1" x-text="`$${product.price}`"></p>
-                <div class="flex gap-2 flex-col md:flex-row justify-center items-center">
-                    <a 
-                        :href="product.url" 
-                        class="inline-block text-[12px] w-[80%] text-center md:w-auto md:text-[14px] bg-primary text-white md:px-4 px-1 md:py-2 rounded hover:bg-[#90edf9] transition-colors"
-                    >
-                        Xem Chi Tiết
-                    </a>
-                    <button 
+        <div class="flex px-4 gap-5"
+            :style="'width: ' + (filteredProducts.length * 25) + '%; transition: transform 0.5s ease;'"
+            x-ref="slider"
+            :style="'transform: translateX(-' + (currentIndex * 25) + '%)'">
+            <template x-for="product in visibleProducts" :key="product.id">
+                <div class="border rounded-lg md:p-4 p-1 bg-white hover:bg-blue-50 shadow-sm">
+                    <img 
                         @click="showQuickView(product)" 
-                        class="inline-block bg-[#90edf9] w-[80%] text-center md:w-auto text-[12px] md:text-[14px] text-white md:px-4 md:py-2 px-1 rounded hover:bg-[#c4f8ff] transition-colors"
-                    >
-                        Quick View
-                    </button>
+                        :src="product.image" 
+                        :alt="product.name" 
+                        class="w-full h-auto md:h-[320px] object-cover rounded-md mb-4"
+                    />
+                    <h3 class="md:text-lg text-base font-semibold text-gray-700 md:mb-2 mb-1" x-text="product.name"></h3>
+                    <p class="text-gray-600 xl:mb-4 mb-1" x-text="`$${product.price}`"></p>
+                    <div class="flex gap-2 flex-col md:flex-row justify-center items-center">
+                        <a 
+                            :href="product.url" 
+                            class="inline-block text-[12px] w-[80%] text-center md:w-auto md:text-[14px] bg-primary text-white md:px-4 px-1 md:py-2 rounded hover:bg-[#90edf9] transition-colors"
+                        >
+                            Xem Chi Tiết
+                        </a>
+                        <button 
+                            @click="showQuickView(product)" 
+                            class="inline-block bg-[#90edf9] w-[80%] text-center md:w-auto text-[12px] md:text-[14px] text-white md:px-4 md:py-2 px-1 rounded hover:bg-[#c4f8ff] transition-colors"
+                        >
+                            Quick View
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </template>
+            </template>
+        </div>
+          <button 
+            @click="prevProduct" 
+            class="absolute w-8 h-8 flex items-center justify-center left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+            :disabled="isPrevDisabled"
+            :class="{ 'opacity-50 cursor-not-allowed': isPrevDisabled }"
+        >
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+            </svg>
+
+        </button>
+        <button 
+            @click="nextProduct" 
+            :disabled="isNextDisabled"
+            :class="{ 'opacity-50 cursor-not-allowed': isNextDisabled }"
+            class="absolute w-8 h-8 flex items-center justify-center right-[1px] top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+        >
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+            </svg>
+
+
+        </button>
+        
     </div>
     <template x-if="filteredProducts.length===0">
         <div class="text-center text-gray-600 py-4">
             Không tìm thấy sản phẩm.
         </div>
     </template>
-    
-
     <div 
         x-show="isQuickViewOpen" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
@@ -140,6 +161,7 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
             </a>
         </div>
     </div>
+  
 </div>
 
 <script>
@@ -150,6 +172,7 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
             activeTab: 'all',
             isQuickViewOpen: false,
             selectedProduct: {},
+            currentIndex: 0,
             products: [
                 <?php foreach ($productCollection as $product): ?>,
                 {
@@ -170,7 +193,6 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
                 return this.products
                     .filter(product => {
                         if (this.activeTab === 'sale') return product.isSale;
-                        if (this.activeTab === 'featured') return product.isFeatured;
                         return true;
                     })
                     .filter(product => product.price <= this.maxPrice)
@@ -189,7 +211,32 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
             showQuickView(product) {
                 this.selectedProduct = product;
                 this.isQuickViewOpen = true;
+            },
+            get visibleProducts() {
+                const total = this.filteredProducts.length;
+                const start = this.currentIndex;
+                const end = Math.min(start + 4, total);
+                return this.filteredProducts.slice(start, end);
+            },
+            prevProduct() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                }
+            },
+            nextProduct() {
+                const total = this.filteredProducts.length;
+                if (this.currentIndex + 4 < total) {
+                    this.currentIndex++;
+                }
+            },
+            get isPrevDisabled() {
+                return this.currentIndex === 0;
+            },
+            get isNextDisabled() {
+                const total = this.filteredProducts.length;
+                return this.currentIndex + 4 >= total;
             }
+           
         }));
     });
 </script>

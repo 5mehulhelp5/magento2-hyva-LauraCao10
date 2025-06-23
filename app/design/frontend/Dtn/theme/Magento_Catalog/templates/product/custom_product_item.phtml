@@ -1,0 +1,29 @@
+<?php
+/** @var \Magento\Catalog\Model\Product $product */
+/** @var \Magento\Catalog\Block\Product\ListProduct $block */
+/** @var string $imageDisplayArea */
+/** @var bool $showDescription */
+/** @var \Magento\Framework\Escaper $escaper */
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+$templateType = isset($templateType) ? $templateType : \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+
+?>
+<div class="custom-product-item rounded-xl p-4 bg-gray-100 hover:bg-blue-50 ">
+    <img src="<?= $imageHelper->init($product, $imageDisplayArea)->getUrl() ?>"
+         alt="<?= $escaper->escapeHtml($product->getName()) ?>"
+         class="w-full object-cover rounded-lg mb-2 cursor-pointer transition-transform transform hover:scale-105 "
+         onclick="window.location.href='<?= $escaper->escapeUrl($product->getProductUrl()) ?>'"
+       >
+    <h3 class="text-xl font-bold text-black mb-1"><?= $escaper->escapeHtml($product->getName()) ?></h3>
+    <?php
+    $priceHtml = $block->getPriceHtml($product, $templateType);
+    if (!$priceHtml) {
+        $priceHtml = '$' . number_format($product->getFinalPrice(), 2);
+    }
+    ?>
+    <p class="text-gray-600 mb-2"><?= $priceHtml ?></p>
+    <?php if ($showDescription): ?>
+        <p class="text-sm text-gray-500"><?= $escaper->escapeHtml($product->getShortDescription()) ?></p>
+    <?php endif; ?>
+    <a href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>" class="inline-block bg-primary rounded-lg hover:bg-[#90edf9] text-white px-3 py-1 ">Xem Chi Tiết</a>
+</div>

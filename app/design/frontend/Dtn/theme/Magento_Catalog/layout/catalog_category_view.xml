@@ -12,8 +12,15 @@
     <body>
         
         <referenceContainer name="category.view.container" remove="true">
-         
         </referenceContainer>
+        <referenceBlock name="page.main.title">
+            <arguments>
+                <argument name="css_class" xsi:type="string">justify-start  text-base md:text-xl flex md:flex-col text-4xl mb-4</argument>
+            </arguments>
+            <block class="Magento\Framework\View\Element\Template" name="custom.category.banner" template="Magento_Catalog::category/custom-banner.phtml" after="page.main.title" before="category.products">
+            </block>
+        </referenceBlock>
+
       
     </body>
 </page>

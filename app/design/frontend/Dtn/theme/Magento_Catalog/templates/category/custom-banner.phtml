@@ -1,0 +1,20 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<div class="w-full text-center rounded-xl shadow-md overflow-hidden relative" 
+   >
+   <img class="h-[400px] w-full object-cover  rounded-xl" src='<?= $block->getViewFileUrl('images/banners/banner1.jpg') ?>' alt="" id="banner-image">
+    <p class="text-lg text-gray-700 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Khuyến mãi đặc biệt cho danh mục này!</p>
+</div>
+<style>
+    #banner-image {
+        height: 150px;
+        border-radius:12px;
+    }
+    
+@media screen and (min-width: 480px) {
+        #banner-image {
+            height: 400px;
+        }
+    }
+</style>

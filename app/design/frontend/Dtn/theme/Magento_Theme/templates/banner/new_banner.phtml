@@ -3,7 +3,8 @@
 
 ?>
 <div x-data="bannerSlider" class="new-store-banner h-[200px] relative xl:h-[500px] text-white text-center rounded-lg shadow-lg overflow-hidden" style="position: relative;">
-    <template x-for="(slide, index) in slides" :key="index">
+   
+<template x-for="(slide, index) in slides" :key="index">
         <div class="absolute inset-0 flex flex-col xl:gap-3 gap-1 justify-center items-center h-full w-full text-black"
              :style="`background-image: url(${slide.image}); background-size: cover; background-position: center;`"
              x-show="currentSlide === index"
@@ -11,13 +12,12 @@
              x-transition:enter-end="opacity-100"
              x-transition:leave="opacity-100"
              x-transition:leave-end="opacity-0">
-            <h2 x-text="slide.title" class="text-xl xl:text-3xl font-bold xl:mb-4"></h2>
-            <p x-text="slide.description" class=" text-[14px] px-2 md:text-lg text-base xl:mb-6"></p>
-            <div class="flex bg-primary gap-1 py-1 px-2 rounded-lg">
-                <h3>Xem ngay</h3>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                </svg>
+             <div class="absolute left-[150px] w-[350px] h-auto flex flex-col text-start items-center justify-start">
+                <p x-text="slide.title" class="text-xl xl:text-3xl font-bold xl:mb-4"></p>
+                <p x-text="slide.description" class=" text-[14px] px-2 md:text-lg text-base xl:mb-6"></p>
+                    <h3 class="bg-primary w-28 flex text-white items-center justify-center py-1 gap-1 rounded-lg">Xem ngay <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                    </svg></h3>
             </div>
         </div>
     </template>
@@ -25,7 +25,7 @@
     @click="prevSlide()" 
     class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75"
 >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="md:size-6 size-3">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="md:size-5 size-3">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
     </button>
@@ -55,7 +55,7 @@
                 {
                   image: '<?= $block->getViewFileUrl('images/banners/banner4.jpg') ?>',
                     title: 'Khuyến Mãi Đặc Biệt!',
-                    description: 'Giảm giá 20% cho tất cả sản phẩm trong tuần này.',
+                    description: 'Giảm giá 20% cho tất cả sản phẩm trong tuần này.  on VAXs best ever carpet washer. Perfect for busy homes with pets. It kills over 99% of bacteria',
                     link: '/promotions/week'
                 },
                 {
@@ -72,7 +72,6 @@
                 }
             ],
             init() {
-             
                 setInterval(() => {
                     this.nextSlide();
                 }, 5000);
